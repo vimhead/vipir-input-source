@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { CURSOR_MARKER, visibleWidth } from "@earendil-works/pi-tui";
 import { createFixture } from "./fixture.mjs";
-import { InputSourceSwitcher } from "../extensions/pi-me-input-source/index.ts";
+import { InputSourceSwitcher } from "../extensions/vipir-input-source/index.ts";
 
 test("input-source switching preserves the insert layout across normal-mode focus transfers", context => {
   const fixture = createFixture(context);
@@ -46,12 +46,12 @@ test("missing input-source helper is reported once without breaking Vim editing"
   assert.equal(calls, 1);
 });
 
-test("plugin registers with the shared vipi-editor runtime API", async () => {
-  const { default: registerPlugin, registration } = await import("../extensions/pi-me-input-source/index.ts");
-  const { VIPI_EDITOR_REGISTER } = await import("vipi-editor/api");
+test("plugin registers with the shared vipir-editor runtime API", async () => {
+  const { default: registerPlugin, registration } = await import("../extensions/vipir-input-source/index.ts");
+  const { VIPIR_EDITOR_REGISTER } = await import("vipir-editor/api");
   const events = [];
   registerPlugin({ events: { emit: (channel, data) => events.push({ channel, data }), on: () => () => {} } });
-  assert.equal(events[0].channel, VIPI_EDITOR_REGISTER);
+  assert.equal(events[0].channel, VIPIR_EDITOR_REGISTER);
   assert.equal(events[0].data, registration);
-  assert.equal(registration.extensionId, "pi-me-input-source");
+  assert.equal(registration.extensionId, "vipir-input-source");
 });

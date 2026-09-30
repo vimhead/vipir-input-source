@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { defineVipiEditorExtension, registerVipiEditorExtension, type VipiEditorFocusedModeEvent } from "vipi-editor/api";
+import { defineVipirEditorExtension, registerVipirEditorExtension, type VipirEditorFocusedModeEvent } from "vipir-editor/api";
 
 type InputSourceCommand = {
 	executable: string;
@@ -22,11 +22,11 @@ const MACISM_COMMAND: InputSourceCommand = {
 };
 
 export default function registerPlugin(pi: ExtensionAPI): void {
-	registerVipiEditorExtension(pi, registration);
+	registerVipirEditorExtension(pi, registration);
 }
 
-export const registration = defineVipiEditorExtension({
-	extensionId: "pi-me-input-source",
+export const registration = defineVipirEditorExtension({
+	extensionId: "vipir-input-source",
 	setup(api) {
 		const switcher = createMacOsInputSourceSwitcher();
 		if (!switcher) return;
@@ -44,7 +44,7 @@ export class InputSourceSwitcher {
 
 	constructor(private readonly options: InputSourceSwitcherOptions) {}
 
-	handleFocusedMode(event: VipiEditorFocusedModeEvent): void {
+	handleFocusedMode(event: VipirEditorFocusedModeEvent): void {
 		this.context = event.ctx;
 		const isCommandMode = event.mode !== "insert";
 		if (isCommandMode === this.isCommandMode || this.isCommandFailureReported) return;
@@ -88,7 +88,7 @@ export class InputSourceSwitcher {
 	private reportCommandFailure(ctx: ExtensionContext, error: Error | undefined): void {
 		if (this.isCommandFailureReported) return;
 		this.isCommandFailureReported = true;
-		ctx.ui.notify(`vipi-editor input source switching failed: ${error?.message ?? this.options.command.executable}`, "warning");
+		ctx.ui.notify(`vipir-editor input source switching failed: ${error?.message ?? this.options.command.executable}`, "warning");
 	}
 }
 
@@ -96,7 +96,7 @@ function createMacOsInputSourceSwitcher(): InputSourceSwitcher | undefined {
 	if (process.platform !== "darwin") return undefined;
 	return new InputSourceSwitcher({
 		command: MACISM_COMMAND,
-		defaultInputSource: process.env.VIPI_EDITOR_DEFAULT_INPUT_SOURCE ?? process.env.PI_ME_DEFAULT_INPUT_SOURCE ?? MACOS_DEFAULT_INPUT_SOURCE,
+		defaultInputSource: process.env.VIPIR_EDITOR_DEFAULT_INPUT_SOURCE ?? process.env.VIPI_EDITOR_DEFAULT_INPUT_SOURCE ?? process.env.PI_ME_DEFAULT_INPUT_SOURCE ?? MACOS_DEFAULT_INPUT_SOURCE,
 		runCommand: (command, args) => {
 			const result = spawnSync(command, args, { encoding: "utf8", timeout: 1000 });
 			return { status: result.status, stdout: result.stdout ?? "", error: result.error };

@@ -1,10 +1,10 @@
 {
-  "name": "pi-me-input-source",
-  "repository": { "type": "git", "url": "git+https://github.com/vimhead/pi-me-input-source.git" },
-  "homepage": "https://github.com/vimhead/pi-me-input-source#readme",
-  "bugs": { "url": "https://github.com/vimhead/pi-me-input-source/issues" },
+  "name": "vipir-input-source",
+  "repository": { "type": "git", "url": "git+https://github.com/vimhead/vipir-input-source.git" },
+  "homepage": "https://github.com/vimhead/vipir-input-source#readme",
+  "bugs": { "url": "https://github.com/vimhead/vipir-input-source/issues" },
   "version": "0.1.0",
-  "description": "macOS input source switching for vipi-editor modal editing.",
+  "description": "macOS input source switching for vipir-editor modal editing.",
   "type": "module",
   "license": "MIT",
   "keywords": [
@@ -19,11 +19,11 @@
   ],
   "pi": {
     "extensions": [
-      "./extensions/pi-me-input-source/index.ts"
+      "./extensions/vipir-input-source/index.ts"
     ]
   },
   "dependencies": {
-    "vipi-editor": "git+https://github.com/vimhead/vipi-editor.git"
+    "vipir-editor": "git+https://github.com/vimhead/vipir-editor.git"
   },
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*",

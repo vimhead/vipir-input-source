@@ -1,9 +1,9 @@
 import "./loader.mjs";
 import { EventEmitter } from "node:events";
-const apiUrl = import.meta.resolve("vipi-editor/api");
-const { VipiEditorSessionRuntime } = await import(new URL("./session-runtime.ts", apiUrl));
+const apiUrl = import.meta.resolve("vipir-editor/api");
+const { VipirEditorSessionRuntime } = await import(new URL("./session-runtime.ts", apiUrl));
 const { ModalEditor } = await import(new URL("./prompt-editor.ts", apiUrl));
-import { createFieldControls, VIPI_EDITOR_API_VERSION, VIPI_EDITOR_READY, VIPI_EDITOR_UNREADY, VIPI_EDITOR_RUNTIME_API_REQUEST } from "vipi-editor/api";
+import { createFieldControls, VIPIR_EDITOR_API_VERSION, VIPIR_EDITOR_READY, VIPIR_EDITOR_UNREADY, VIPIR_EDITOR_RUNTIME_API_REQUEST } from "vipir-editor/api";
 
 export function createFixture(context, { ready = true, registrations = [] } = {}) {
   const emitter = new EventEmitter();
@@ -30,10 +30,10 @@ export function createFixture(context, { ready = true, registrations = [] } = {}
     on(name, listener) { emitter.on(name, listener); return () => emitter.off(name, listener); },
   }, getCommands: () => [] };
   const ctx = { mode: "tui", isIdle: () => true, ui: { theme, notify: (...args) => notifications.push(args) } };
-  const runtime = new VipiEditorSessionRuntime({ pi, ctx, registrations: new Map(registrations.map(r => [r.extensionId, r])) });
+  const runtime = new VipirEditorSessionRuntime({ pi, ctx, registrations: new Map(registrations.map(r => [r.extensionId, r])) });
   let active = ready;
-  let version = VIPI_EDITOR_API_VERSION;
-  emitter.on(VIPI_EDITOR_RUNTIME_API_REQUEST, ({ receive }) => {
+  let version = VIPIR_EDITOR_API_VERSION;
+  emitter.on(VIPIR_EDITOR_RUNTIME_API_REQUEST, ({ receive }) => {
     if (active) receive({ ...runtime.createRuntimeApi(), version });
   });
   const api = runtime.createRuntimeApi();
@@ -45,8 +45,8 @@ export function createFixture(context, { ready = true, registrations = [] } = {}
     pi, ctx, runtime, api, fields, options, tui, theme, keybindings, editorTheme, modes, emitter, terminalWrites, notifications,
     getRenderRequests: () => renders,
     createPrompt() { const editor = new ModalEditor({ tui, theme: editorTheme, keybindings, runtime, appTheme: theme }); editor.focused = true; return editor; },
-    activate() { active = true; emitter.emit(VIPI_EDITOR_READY); },
-    stop() { active = false; runtime.dispose(); emitter.emit(VIPI_EDITOR_UNREADY); },
-    setVersion(next) { version = next; emitter.emit(VIPI_EDITOR_READY); },
+    activate() { active = true; emitter.emit(VIPIR_EDITOR_READY); },
+    stop() { active = false; runtime.dispose(); emitter.emit(VIPIR_EDITOR_UNREADY); },
+    setVersion(next) { version = next; emitter.emit(VIPIR_EDITOR_READY); },
   };
 }
