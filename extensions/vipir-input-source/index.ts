@@ -96,7 +96,7 @@ function createMacOsInputSourceSwitcher(): InputSourceSwitcher | undefined {
 	if (process.platform !== "darwin") return undefined;
 	return new InputSourceSwitcher({
 		command: MACISM_COMMAND,
-		defaultInputSource: process.env.VIPIR_EDITOR_DEFAULT_INPUT_SOURCE ?? process.env.VIPI_EDITOR_DEFAULT_INPUT_SOURCE ?? process.env.PI_ME_DEFAULT_INPUT_SOURCE ?? MACOS_DEFAULT_INPUT_SOURCE,
+		defaultInputSource: process.env.VIPIR_EDITOR_DEFAULT_INPUT_SOURCE ?? MACOS_DEFAULT_INPUT_SOURCE,
 		runCommand: (command, args) => {
 			const result = spawnSync(command, args, { encoding: "utf8", timeout: 1000 });
 			return { status: result.status, stdout: result.stdout ?? "", error: result.error };

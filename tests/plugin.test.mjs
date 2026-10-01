@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFile } from "node:fs/promises";
 import { CURSOR_MARKER, visibleWidth } from "@earendil-works/pi-tui";
 import { createFixture } from "./fixture.mjs";
 import { InputSourceSwitcher } from "../extensions/vipir-input-source/index.ts";
@@ -44,6 +45,12 @@ test("missing input-source helper is reported once without breaking Vim editing"
   assert.equal(field.getValue(), "alpha betXa");
   assert.equal(fixture.notifications.length, 1);
   assert.equal(calls, 1);
+});
+
+test("only the current input-source environment variable is supported", async () => {
+  const source = await readFile(new URL("../extensions/vipir-input-source/index.ts", import.meta.url), "utf8");
+  assert.match(source, /process\.env\.VIPIR_EDITOR_DEFAULT_INPUT_SOURCE/);
+  assert.doesNotMatch(source, /process\.env\.(?:VIPI_EDITOR|PI_ME)_/);
 });
 
 test("plugin registers with the shared vipir-editor runtime API", async () => {
